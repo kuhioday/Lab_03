@@ -14,6 +14,18 @@ Password::Password(){
 }
 
 Password::~Password(){
+	ListArrayIterator<String>* all_iter = all_words->iterator();
+	ListArrayIterator<String>* viable_iter = viable_words->iterator();
+	while(all_iter->hasNext()){
+		delete all_iter->next();
+	}
+	while(viable_iter->hasNext()){
+		delete viable_iter->next();
+	}
+	delete all_iter;
+	delete viable_iter;
+	delete all_words;
+	delete viable_words;
 	
 }
 
@@ -26,19 +38,25 @@ void Password::addWord(String* word){
 }
 
 void Password::guess(int try_password, int num_matches){
-	viable_words->remove(try_password);
 	ListArrayIterator<String>* viable_iter = viable_words->iterator();
 	int count = 1;
+	String* tried_word = all_words->get(try_password);
 	while(viable_iter->hasNext()){
-		String* tried_word = all_words->get(try_password);
 		String* curr_word = viable_iter->next();
 		
-		if(getNumMatches(tried_word, curr_word) < num_matches){
+		if(num_matches == 0){
+			if(getNumMatches(tried_word, curr_word) > 0){
+				viable_words->remove(count);
+				count --;
+			}
+		}
+		else if(getNumMatches(tried_word, curr_word) <= num_matches || getNumMatches(tried_word, curr_word) == len){
 			viable_words->remove(count);
 			count --;
 		}
 		count ++;
 	}
+	delete tried_word;
 	
 }
 
@@ -51,6 +69,7 @@ void Password::displayViableWords(){
 		curr_string->displayString();
 		newL->displayString();
 	}
+	delete viable_iter;
 }
 
 int Password::getNumberOfPasswordsLeft(){
@@ -61,7 +80,7 @@ String* Password::getOriginalWord(int index){
 	return all_words->get(index);
 }
 
-int Password::getNumMatches(String* curr_word, String* word_guess){ //this is wrong.
+int Password::getNumMatches(String* curr_word, String* word_guess){ 
 	int matches = 0;
 	for(int i = 0; i < len; i++){
 		if(curr_word->charAt(i) == word_guess->charAt(i)) matches ++;
