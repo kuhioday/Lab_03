@@ -7,14 +7,68 @@ using CSC2110::ListArrayIterator;
 using namespace std;
 
 
+Password::Password(){
+	viable_words = new ListArray<String>();
+	all_words = new ListArray<String>();
+	len = -1;
+}
 
+Password::~Password(){
+	
+}
 
+void Password::addWord(String* word){
+	if(len == -1){
+		len = word->length();
+	}
+	viable_words->add(word);
+	all_words->add(word);
+}
 
+void Password::guess(int try_password, int num_matches){
+	viable_words->remove(try_password);
+	ListArrayIterator<String>* viable_iter = viable_words->iterator();
+	int count = 1;
+	while(viable_iter->hasNext()){
+		String* tried_word = all_words->get(try_password);
+		String* curr_word = viable_iter->next();
+		
+		if(getNumMatches(tried_word, curr_word) < num_matches){
+			viable_words->remove(count);
+			count --;
+		}
+		count ++;
+	}
+	
+}
 
+void Password::displayViableWords(){
+	ListArrayIterator<String>* viable_iter = viable_words->iterator();
+	
+	while(viable_iter->hasNext()){
+		String* newL = new String ("\n");
+		String* curr_string = viable_iter->next();
+		curr_string->displayString();
+		newL->displayString();
+	}
+}
 
+int Password::getNumberOfPasswordsLeft(){
+	return viable_words->size();
+}
 
+String* Password::getOriginalWord(int index){
+	return all_words->get(index);
+}
 
-
+int Password::getNumMatches(String* curr_word, String* word_guess){ //this is wrong.
+	int matches = 0;
+	for(int i = 0; i < len; i++){
+		if(curr_word->charAt(i) == word_guess->charAt(i)) matches ++;
+	}
+	
+	return matches;
+}
 
 
 int Password::bestGuess()

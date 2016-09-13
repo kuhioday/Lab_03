@@ -2,6 +2,7 @@
 //fill in includes, don't forget namespaces
 #include "Keyboard.h"
 #include "ReadFile.h"
+#include "Text.h"
 #include <iostream>
 using namespace CSC2110;
 using namespace std;
@@ -18,11 +19,10 @@ void addWords(Password* fh)
    delete num_words_str;
 
    for (int i = 0; i < num_words; i++)
-   {
+   {  
       String* word = rf->readLine();
       fh->addWord(word);
    }
-
    delete rf;
    fh->displayViableWords();
 }

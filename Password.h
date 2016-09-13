@@ -18,12 +18,12 @@ class Password
    public:
 		Password();
 		~Password();
-		void addWord(String* word);
-		void guess(int try_password, int num_matches);
-		int getNumberOfPasswordsLeft();
+		void addWord(String* word);//done
+		void guess(int try_password, int num_matches);//done
+		int getNumberOfPasswordsLeft();//done
 		void displayViableWords();
-		int bestGuess();
-		String* getOriginalWord(int index);
+		int bestGuess();//done
+		String* getOriginalWord(int index);//done
 
 };
 
